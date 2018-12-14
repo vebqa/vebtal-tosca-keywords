@@ -19,15 +19,17 @@ using Tricentis.Automation.AutomationInstructions.Configuration;
 
 namespace veb {
 
-	[SpecialExecutionTaskName("DeleteRepository")]
-	public class deleteRepository: SpecialExecutionTask {
+	[SpecialExecutionTaskName("CreateRepository")]
+	public class createRepository: SpecialExecutionTask {
 
-		public deleteRepository(Validator validator) : base(validator) {}
+		public createRepository(Validator validator) : base(validator) {}
 
 		public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction) {
 
 			String endPoint = testAction.GetParameterAsInputValue("EndPoint", false).Value;
+			String repoDescription = testAction.GetParameterAsInputValue("Description", false).Value;
 			String repositoryName = testAction.GetParameterAsInputValue("Repository", false).Value;
+			String repoType = "InMemory";
 
 			if (string.IsNullOrEmpty(endPoint)) {
 				throw new ArgumentException(string.Format("Es muss ein EndPoint angegeben sein."));
@@ -44,8 +46,11 @@ namespace veb {
 				throw new ArgumentException(string.Format("Es muss ein Repository Name angegeben sein."));
 			}
 
-			var client = new RestClient(endPoint + "configuration/repositories/" + repositoryName);
-			var request = new RestRequest(Method.DELETE);
+			var client = new RestClient(endPoint + "configuration/repositories");
+			var request = new RestRequest(Method.POST);
+			request.RequestFormat = DataFormat.Json;
+			request.AddHeader("Content-Type", "application/json");
+			request.AddBody(new {description = repoDescription, location = repositoryName, name = repositoryName, type = repoType});
 
 			IRestResponse response = client.Execute(request);
 			HttpStatusCode statusMessage = response.StatusCode;
