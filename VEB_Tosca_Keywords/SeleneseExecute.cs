@@ -80,17 +80,17 @@ namespace veb
 				return new PassedActionResult("Got response: " + content);
 			} else {
 // Im Falle eines Fehlers und damit eines Abbruchs muessen wir die Browser Session aufraeumen
-				var requestClean = new RestRequest("selenese/close", Method.POST);
-				requestClean.RequestFormat = DataFormat.Json;
-				requestClean.AddHeader("Content-Type", "application/json");
-				requestClean.AddHeader("Accept", "application/json");
-				requestClean.AddBody(new { 
-					command = "close", 
-					target = "this", 
-					value = "null"
-					});
+				// var requestClean = new RestRequest("selenese/close", Method.POST);
+				// requestClean.RequestFormat = DataFormat.Json;
+				// requestClean.AddHeader("Content-Type", "application/json");
+				// requestClean.AddHeader("Accept", "application/json");
+				// requestClean.AddBody(new { 
+				//	command = "close", 
+				//	target = "this", 
+				//	value = "null"
+				//	});
 
-				IRestResponse responseClean = client.Execute(requestClean);
+				// IRestResponse responseClean = client.Execute(requestClean);
 
 
 				return new  NotFoundFailedActionResult("Command failed: " + content + " for request: [command=" + paraCommand + "; target=" + paraTarget + "; value=" + paraValue + "]");
