@@ -1,4 +1,5 @@
-﻿/*
+﻿
+/*
 * Erstellt mit Eclipse.
 * Benutzer: Nitja
 * Erstellt am 14.12.2018
@@ -28,10 +29,10 @@ namespace veb {
 			String endPoint = testAction.GetParameterAsInputValue("EndPoint", false).Value;
 			String repoDescription = testAction.GetParameterAsInputValue("Description", false).Value;
 			String repositoryName = testAction.GetParameterAsInputValue("Repository", false).Value;
-			const repoType = "InMemory";
+			const String repoType = "InMemory";
 
 			if (string.IsNullOrEmpty(endPoint)) {
-				throw new ArgumentException(string.Format("End Point is a mandatory parameter."));
+				throw new ArgumentException("End Point is a mandatory parameter.");
 			}
 			else
 			{
@@ -42,7 +43,7 @@ namespace veb {
 			}
 
 			if (string.IsNullOrEmpty(repositoryName)) {
-				throw new ArgumentException(string.Format("Repository Name is a mandatory parameter."));
+				throw new ArgumentException("Repository Name is a mandatory parameter.");
 			}
 
 			var client = new RestClient(endPoint + "configuration/repositories");
