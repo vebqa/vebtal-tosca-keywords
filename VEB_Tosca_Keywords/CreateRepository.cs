@@ -31,7 +31,7 @@ namespace veb {
 			const repoType = "InMemory";
 
 			if (string.IsNullOrEmpty(endPoint)) {
-				throw new ArgumentException("End Point is a mandatory parameter.");
+				throw new ArgumentException(string.Format("End Point is a mandatory parameter."));
 			}
 			else
 			{
@@ -42,10 +42,10 @@ namespace veb {
 			}
 
 			if (string.IsNullOrEmpty(repositoryName)) {
-				throw new ArgumentException("Repository Name is a mandatory parameter.");
+				throw new ArgumentException(string.Format("Repository Name is a mandatory parameter."));
 			}
 
-			var client = new Uri(endPoint + "configuration/repositories");
+			var client = new RestClient(endPoint + "configuration/repositories");
 			var request = new RestRequest(Method.POST);
 			request.RequestFormat = DataFormat.Json;
 			request.AddHeader("Content-Type", "application/json");
