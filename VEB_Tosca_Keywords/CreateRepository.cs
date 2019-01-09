@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
 * Erstellt mit Eclipse.
 * Benutzer: Nitja
 * Erstellt am 14.12.2018
@@ -20,19 +19,19 @@ using Tricentis.Automation.AutomationInstructions.Configuration;
 namespace veb {
 
 	[SpecialExecutionTaskName("CreateRepository")]
-	public class createRepository: SpecialExecutionTask {
+	public class CreateRepository: SpecialExecutionTask {
 
-		public createRepository(Validator validator) : base(validator) {}
+		public CreateRepository(Validator validator) : base(validator) {}
 
 		public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction) {
 
 			String endPoint = testAction.GetParameterAsInputValue("EndPoint", false).Value;
 			String repoDescription = testAction.GetParameterAsInputValue("Description", false).Value;
 			String repositoryName = testAction.GetParameterAsInputValue("Repository", false).Value;
-			String repoType = "InMemory";
+			const repoType = "InMemory";
 
 			if (string.IsNullOrEmpty(endPoint)) {
-				throw new ArgumentException(string.Format("Es muss ein EndPoint angegeben sein."));
+				throw new ArgumentException("End Point is a mandatory parameter.");
 			}
 			else
 			{
@@ -43,10 +42,10 @@ namespace veb {
 			}
 
 			if (string.IsNullOrEmpty(repositoryName)) {
-				throw new ArgumentException(string.Format("Es muss ein Repository Name angegeben sein."));
+				throw new ArgumentException("Repository Name is a mandatory parameter.");
 			}
 
-			var client = new RestClient(endPoint + "configuration/repositories");
+			var client = new Uri(endPoint + "configuration/repositories");
 			var request = new RestRequest(Method.POST);
 			request.RequestFormat = DataFormat.Json;
 			request.AddHeader("Content-Type", "application/json");
