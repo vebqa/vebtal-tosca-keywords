@@ -46,7 +46,7 @@ namespace veb {
 				throw new ArgumentException("Repository Name is a mandatory parameter.");
 			}
 
-			var client = new RestClient(endPoint + "configuration/repositories");
+			var client = new RestClient(new Uri(endPoint + "configuration/repositories"));
 			var request = new RestRequest(Method.POST);
 			request.RequestFormat = DataFormat.Json;
 			request.AddHeader("Content-Type", "application/json");

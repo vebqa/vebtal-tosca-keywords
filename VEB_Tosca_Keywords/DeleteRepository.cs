@@ -20,9 +20,9 @@ using Tricentis.Automation.AutomationInstructions.Configuration;
 namespace veb {
 
 	[SpecialExecutionTaskName("DeleteRepository")]
-	public class deleteRepository: SpecialExecutionTask {
+	public class DeleteRepository: SpecialExecutionTask {
 
-		public deleteRepository(Validator validator) : base(validator) {}
+		public DeleteRepository(Validator validator) : base(validator) {}
 
 		public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction) {
 
@@ -30,7 +30,7 @@ namespace veb {
 			String repositoryName = testAction.GetParameterAsInputValue("Repository", false).Value;
 
 			if (string.IsNullOrEmpty(endPoint)) {
-				throw new ArgumentException(string.Format("Es muss ein EndPoint angegeben sein."));
+				throw new ArgumentException("End Point is a mandatory parameter.");
 			}
 			else
 			{
@@ -41,10 +41,10 @@ namespace veb {
 			}
 
 			if (string.IsNullOrEmpty(repositoryName)) {
-				throw new ArgumentException(string.Format("Es muss ein Repository Name angegeben sein."));
+				throw new ArgumentException("Repository Name is a mandatory parameter.");
 			}
 
-			var client = new RestClient(endPoint + "configuration/repositories/" + repositoryName);
+			var client = new RestClient(new Uri(endPoint + "configuration/repositories/" + repositoryName));
 			var request = new RestRequest(Method.DELETE);
 
 			IRestResponse response = client.Execute(request);
