@@ -3,7 +3,7 @@
 * Erstellt mit Eclipse.
 * Benutzer: Nitja
 * Erstellt am 14.12.2018
-* Zuletzt modifiziert: 14.12.2018
+* Zuletzt modifiziert: 10.01.2019
 */
 
 using System;
