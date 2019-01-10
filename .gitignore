@@ -2,3 +2,4 @@
 /packages/
 /.sonarqube/
 /.settings/
+/target/
