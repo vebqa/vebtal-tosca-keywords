@@ -18,25 +18,24 @@ using Tricentis.Automation.AutomationInstructions.Configuration;
 
 namespace veb {
 
-	[SpecialExecutionTaskName("EncodeImageToBuffer")]
-	public class EncodeImageToBuffer: SpecialExecutionTask {
+	[SpecialExecutionTaskName("DecodeDataToImage")]
+	public class DecodeDataToImage: SpecialExecutionTask {
 
-		public EncodeImageToBuffer(Validator validator) : base(validator) {}
+		public DecodeDataToImage(Validator validator) : base(validator) {}
 
 		public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction) {
 		
-			String sourceFile = testAction.GetParameterAsInputValue("ImageFile", false).Value;
-			String bufferParameterName = testAction.GetParameterAsInputValue("BufferParamName", false).Value;
+			String base64ImageRepresentation = testAction.GetParameterAsInputValue("Payload", false).Value;
+			String targetFile = testAction.GetParameterAsInputValue("TargetFile", false).Value;
 
-			if (sourceFile != null && bufferParameterName != null) {
-				string base64ImageRepresentation = Convert.ToBase64String(System.IO.File.ReadAllBytes(sourceFile));
-				Buffers.Instance.SetBuffer(bufferParameterName, base64ImageRepresentation, false);
+			if (targetFile != null && base64ImageRepresentation != null) {
+				System.IO.File.WriteAllBytes(targetFile, Convert.FromBase64String(base64ImageRepresentation));
 			} else {
 				throw new ArgumentException();
 			}
 			
-			return new PassedActionResult("Encoding Image successfully completed");
-
+			return new PassedActionResult("Decoding Image successfully completed");
+			
 		}
 	}
 }
