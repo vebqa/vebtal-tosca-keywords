@@ -48,8 +48,21 @@ namespace veb
 				paraValue = "";
 			}
 
-// Rest Service konfigurierbar machen?
-			var client = new RestClient("http://127.0.0.1:84");
+			// rest server address + port can be configured via buffer settings.
+			// key should be: LOCAL_VEBTAL_PORT
+			String outServer;
+			bool adrServer = Buffers.Instance.TryGetBuffer("LOCAL_VEBTAL_SERVER", out outServer);
+			if (string.IsNullOrEmpty(outServer)) {
+				outServer = "http://127.0.0.1"; // fallback to default
+			}
+
+			// key should be: LOCAL_VEBTAL_PORT
+			String outPort;
+			bool port = Buffers.Instance.TryGetBuffer("LOCAL_VEBTAL_PORT", out outPort);
+			if (string.IsNullOrEmpty(outPort)) {
+				outPort = "84"; // fallback to default
+			}
+			var client = new RestClient(outServer + ":" + outPort);
 			var request = new RestRequest("pdf/execute", Method.POST);
 			request.RequestFormat = DataFormat.Json;
 			request.AddHeader("Content-Type", "application/json");

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Erstellt mit SharpDevelop.
  * Benutzer: doerges
  * Datum: 03.07.2017
@@ -20,12 +20,12 @@ using Tricentis.Automation.Engines;
 
 namespace veb
 {
-	[SpecialExecutionTaskName("TN3270Execute")]
-	public class TN3270Execute : SpecialExecutionTask
+	[SpecialExecutionTaskName("ICompExecute")]
+	public class ICompExecute : SpecialExecutionTask
 	{
 		#region Public Methods and Operators
 
-		public TN3270Execute(Validator validator)
+		public ICompExecute(Validator validator)
 			: base(validator)
 		{
 		}
@@ -64,7 +64,7 @@ namespace veb
 				outPort = "84"; // fallback to default
 			}
 			var client = new RestClient(outServer + ":" + outPort);
-			var request = new RestRequest("tn3270/execute", Method.POST);
+			var request = new RestRequest("icomp/execute", Method.POST);
 			request.RequestFormat = DataFormat.Json;
 			request.AddHeader("Content-Type", "application/json");
 			request.AddHeader("Accept", "application/json");

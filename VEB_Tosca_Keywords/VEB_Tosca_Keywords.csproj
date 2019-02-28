@@ -79,9 +79,11 @@
     <Compile Include="CheckMessage.cs" />
     <Compile Include="GenerateIban.cs" />
     <Compile Include="ClearDirectory.cs" />
+	<Compile Include="CreateRepository.cs" />
     <Compile Include="CountMails.cs" />
     <Compile Include="DeleteAllMessages.cs" />
     <Compile Include="DeleteBuffer.cs" />
+	<Compile Include="DeleteRepository.cs" />
     <Compile Include="GenerateExchange.cs" />
     <Compile Include="ListMails.cs" />
     <Compile Include="LoadSettings.cs" />
