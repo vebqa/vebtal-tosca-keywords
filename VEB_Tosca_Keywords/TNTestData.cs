@@ -64,7 +64,7 @@ namespace veb
 			}
 			
 			var client = new RestClient(outServer + ":" + outPort);
-			var request = new RestRequest("/td/execute", Method.POST);
+			var request = new RestRequest("/td", Method.POST);
 			request.RequestFormat = DataFormat.Json;
 			request.AddHeader("Content-Type", "application/json");
 			request.AddHeader("Accept", "application/json");
