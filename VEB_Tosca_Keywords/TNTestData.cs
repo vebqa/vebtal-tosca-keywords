@@ -33,11 +33,6 @@ namespace veb
 				throw new ArgumentException(string.Format("Es muss ein Command angegeben sein."));
 			}
 			
-			String paraDescription = testAction.GetParameterAsInputValue("Description", false).Value;
-			if (string.IsNullOrEmpty(paraDescription)) {
-				paraDescription = "";
-			}
-
 			String paraTarget = testAction.GetParameterAsInputValue("Target", false).Value;
 			if (string.IsNullOrEmpty(paraTarget)) {
 				throw new ArgumentException(string.Format("Es muss ein Target angegeben sein."));
@@ -70,7 +65,6 @@ namespace veb
 			request.AddHeader("Accept", "application/json");
 			request.AddBody(new { 
 				command = paraCommand,
-				description = paraDescription,
 				target = paraTarget, 
 				value = paraValue
 				});
