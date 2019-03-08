@@ -18,7 +18,7 @@ using Tricentis.Automation.Execution.Results;
 namespace veb
 {
 	[SpecialExecutionTaskName("TNTestData")]
-	public class TNTestData : SpecialExecutionTaskEnhanced
+	public class TNTestData : SpecialExecutionTask
 	{
 		#region Public Methods and Operators
 
@@ -26,7 +26,7 @@ namespace veb
 		{
 		}
 
-		public override void ExecuteTask(ISpecialExecutionTaskTestAction testAction)
+		public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction)
 		{
 			String paraCommand = testAction.GetParameterAsInputValue("Command", false).Value;
 			if (string.IsNullOrEmpty(paraCommand)) {
@@ -35,12 +35,12 @@ namespace veb
 			
 			String paraTarget = testAction.GetParameterAsInputValue("Target", false).Value;
 			if (string.IsNullOrEmpty(paraTarget)) {
-				throw new ArgumentException(string.Format("Es muss ein Target angegeben sein."));
+				paraTarget = "";
 			}
 
 			String paraValue = testAction.GetParameterAsInputValue("Value", false).Value;
 			if (string.IsNullOrEmpty(paraValue)) {
-				throw new ArgumentException(string.Format("Es muss ein Value angegeben sein."));
+				paraValue = "";
 			}
 
 			// rest server address + port can be configured via buffer settings.
@@ -59,7 +59,7 @@ namespace veb
 			}
 			
 			var client = new RestClient(outServer + ":" + outPort);
-			var request = new RestRequest("/td", Method.POST);
+			var request = new RestRequest("td/execute", Method.POST);
 			request.RequestFormat = DataFormat.Json;
 			request.AddHeader("Content-Type", "application/json");
 			request.AddHeader("Accept", "application/json");
@@ -90,9 +90,10 @@ namespace veb
             }
             
 			if (rowCode == "0") {
-               	testAction.SetResult(SpecialExecutionTaskResultState.Ok, "The execution of the command was successfully processed.");
+				return new PassedActionResult("Got response: " + content);
 			} else {
-				testAction.SetResult(SpecialExecutionTaskResultState.Failed, rowMsg);}
+				return new  NotFoundFailedActionResult("Command failed: " + content + " for request: [command=" + paraCommand + "; target=" + paraTarget + "; value=" + paraValue + "]");
+			}
 		}
 
 		#endregion
