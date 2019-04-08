@@ -21,13 +21,14 @@ namespace veb
 	[SpecialExecutionTaskName("CalcWorkingDays")]
 	public class CalcWorkingDays : SpecialExecutionTask {
 	
-		private double calcBusinessDays;
-		
         public CalcWorkingDays(Validator validator) : base(validator) {}
 
         public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction)   {
         
-			DateTime paraStartDate, paraEndDate;
+        	double calcBusinessDays;
+        	int i;
+			DateTime paraStartDate, paraEndDate, chosenBatchDate;
+			String[] BatchDates = {"01-01-2019", "19-04-2019", "22-04-2019", "01-05-2019", "30-05-2019", "10-06-2019", "03-10-2019", "24-12-2019", "25-12-2019", "26-12-2019", "31-12-2019"};
 			
 			if (string.IsNullOrEmpty(testAction.GetParameterAsInputValue("StartDate", false).Value))
             {
@@ -45,6 +46,13 @@ namespace veb
 			calcBusinessDays = 1 + ((paraEndDate - paraStartDate).TotalDays * 5 - (paraStartDate.DayOfWeek - paraEndDate.DayOfWeek) * 2) / 7;
 			if (paraEndDate.DayOfWeek == DayOfWeek.Saturday) calcBusinessDays--;
 			if (paraStartDate.DayOfWeek == DayOfWeek.Sunday) calcBusinessDays--;
+			
+			for(i = 0; i < 10; i++) {
+				chosenBatchDate = DateTime.ParseExact(BatchDates[i], "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+				if (chosenBatchDate >= paraStartDate && chosenBatchDate <= paraEndDate) {
+					calcBusinessDays--;
+				}
+			}
 			
             return new PassedActionResult("Calculated Business Days: " + calcBusinessDays);
             
