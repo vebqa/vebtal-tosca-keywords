@@ -7,6 +7,14 @@
 
 using System;
 using System.Linq;
+using System.Collections.Generic;
+using Tricentis.Automation.Engines;
+using Tricentis.Automation.Creation;
+using Tricentis.Automation.Execution.Results;
+using Tricentis.Automation.Engines.SpecialExecutionTasks;
+using Tricentis.Automation.AutomationInstructions.TestActions;
+using Tricentis.Automation.AutomationInstructions.Configuration;
+using Tricentis.Automation.Engines.SpecialExecutionTasks.Attributes;
 
 namespace veb
 {
@@ -21,23 +29,9 @@ namespace veb
 
         public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction)
         {
-            String paraCommand = testAction.GetParameterAsInputValue("Command", false).Value;
-            if (string.IsNullOrEmpty(paraCommand))
-            {
-                throw new ArgumentException(string.Format("Es muss ein Command angegeben sein."));
-            }
+            DateTime paraStartDate = DateTime.ParseExact(testAction.GetParameterAsInputValue("StartDate", false).Value, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
 
-            DateTime paraStartDate = testAction.GetParameterAsInputValue("StartDate", false).Value;
-            if (string.IsNullOrEmpty(paraStartDate))
-            {
-                throw new ArgumentException(string.Format("Es muss ein StartDate angegeben sein."));
-            }
-
-            DateTime paraEndDate = testAction.GetParameterAsInputValue("EndDate", false).Value;
-            if (string.IsNullOrEmpty(paraEndDate))
-            {
-                throw new ArgumentException(string.Format("Es muss ein EndDate angegeben sein."));
-            }
+            DateTime paraEndDate = DateTime.ParseExact(testAction.GetParameterAsInputValue("EndDate", false).Value, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
 
 			calcBusinessDays = 1 + ((paraEndDate - paraStartDate).TotalDays * 5 - (paraStartDate.DayOfWeek - paraEndDate.DayOfWeek) * 2) / 7;
 			
