@@ -19,26 +19,35 @@ using Tricentis.Automation.Engines.SpecialExecutionTasks.Attributes;
 namespace veb
 {
 	[SpecialExecutionTaskName("CalcWorkingDays")]
-	public class CalcWorkingDays : SpecialExecutionTask
-    {
+	public class CalcWorkingDays : SpecialExecutionTask {
+	
 		private double calcBusinessDays;
 		
-        public CalcWorkingDays(Validator validator) : base(validator)
-        {
-        }
+        public CalcWorkingDays(Validator validator) : base(validator) {}
 
-        public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction)
-        {
-            DateTime paraStartDate = DateTime.ParseExact(testAction.GetParameterAsInputValue("StartDate", false).Value, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
-
-            DateTime paraEndDate = DateTime.ParseExact(testAction.GetParameterAsInputValue("EndDate", false).Value, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
-
-			calcBusinessDays = 1 + ((paraEndDate - paraStartDate).TotalDays * 5 - (paraStartDate.DayOfWeek - paraEndDate.DayOfWeek) * 2) / 7;
+        public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction)   {
+        
+			DateTime paraStartDate, paraEndDate;
 			
+			if (string.IsNullOrEmpty(testAction.GetParameterAsInputValue("StartDate", false).Value))
+            {
+                throw new ArgumentException(string.Format("Es muss ein Start Datum angegeben sein."));
+            }
+			
+			if (string.IsNullOrEmpty(testAction.GetParameterAsInputValue("EndDate", false).Value))
+            {
+                throw new ArgumentException(string.Format("Es muss ein End Datum angegeben sein."));
+            }
+            
+		 	paraStartDate = DateTime.ParseExact(testAction.GetParameterAsInputValue("StartDate", false).Value, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+           	paraEndDate = DateTime.ParseExact(testAction.GetParameterAsInputValue("EndDate", false).Value, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+			          
+			calcBusinessDays = 1 + ((paraEndDate - paraStartDate).TotalDays * 5 - (paraStartDate.DayOfWeek - paraEndDate.DayOfWeek) * 2) / 7;
 			if (paraEndDate.DayOfWeek == DayOfWeek.Saturday) calcBusinessDays--;
 			if (paraStartDate.DayOfWeek == DayOfWeek.Sunday) calcBusinessDays--;
-
-            testAction.SetResult(SpecialExecutionTaskResultState.Ok, "Calculated Business Days: " + calcBusinessDays);
+			
+            return new PassedActionResult("Calculated Business Days: " + calcBusinessDays);
+            
         }
     }
 }
