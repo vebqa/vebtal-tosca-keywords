@@ -18,14 +18,14 @@ using Tricentis.Automation.AutomationInstructions.Configuration;
 
 namespace veb {
 
-	[SpecialExecutionTaskName("EncodeImageToBuffer")]
-	public class EncodeImageToBuffer: SpecialExecutionTask {
+	[SpecialExecutionTaskName("EncodeFileToBuffer")]
+	public class EncodeFileToBuffer: SpecialExecutionTask {
 
-		public EncodeImageToBuffer(Validator validator) : base(validator) {}
+		public EncodeFileToBuffer(Validator validator) : base(validator) {}
 
 		public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction) {
 		
-			String sourceFile = testAction.GetParameterAsInputValue("ImageFile", false).Value;
+			String sourceFile = testAction.GetParameterAsInputValue("InputFile", false).Value;
 			String bufferParameterName = testAction.GetParameterAsInputValue("BufferParamName", false).Value;
 
 			if (sourceFile != null && bufferParameterName != null) {
@@ -35,7 +35,7 @@ namespace veb {
 				throw new ArgumentException();
 			}
 			
-			return new PassedActionResult("Encoding Image successfully completed");
+			return new PassedActionResult("Encoding File successfully completed");
 
 		}
 	}

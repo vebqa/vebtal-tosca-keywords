@@ -18,10 +18,10 @@ using Tricentis.Automation.AutomationInstructions.Configuration;
 
 namespace veb {
 
-	[SpecialExecutionTaskName("DecodeDataToImage")]
-	public class DecodeDataToImage: SpecialExecutionTask {
+	[SpecialExecutionTaskName("DecodeDataToFile")]
+	public class DecodeDataToFile: SpecialExecutionTask {
 
-		public DecodeDataToImage(Validator validator) : base(validator) {}
+		public DecodeDataToFile(Validator validator) : base(validator) {}
 
 		public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction) {
 		
@@ -34,7 +34,7 @@ namespace veb {
 				throw new ArgumentException();
 			}
 			
-			return new PassedActionResult("Decoding Image successfully completed");
+			return new PassedActionResult("Decoding File successfully completed");
 			
 		}
 	}

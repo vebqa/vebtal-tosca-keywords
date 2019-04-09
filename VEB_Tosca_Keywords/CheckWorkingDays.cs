@@ -27,8 +27,9 @@ namespace veb
         public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction) {
         
         	int i, paraExpectedDays;
+        	String sepaCreationDate, sepaRequestCollectionDate;
 			DateTime paraStartDate, paraEndDate, chosenBatchDate;
-			String[] noBatchDays = {"01-01-2019", "19-04-2019", "22-04-2019", "01-05-2019", "30-05-2019", "10-06-2019", "03-10-2019", "24-12-2019", "25-12-2019", "26-12-2019", "31-12-2019"};
+			String[] noBatchDays = {"2019-01-01", "2019-04-19", "2019-04-22", "2019-05-01", "2019-05-30", "2019-06-10", "2019-10-03", "2019-12-24", "2019-12-25", "2019-12-26", "2019-12-31"};
 			double calcBusinessDays;
 			
 			if (string.IsNullOrEmpty(testAction.GetParameterAsInputValue("StartDate", false).Value))
@@ -41,8 +42,11 @@ namespace veb
                 throw new ArgumentException(string.Format("End Date is required."));
             }
             
-            paraStartDate = DateTime.ParseExact(testAction.GetParameterAsInputValue("StartDate", false).Value, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
-           	paraEndDate = DateTime.ParseExact(testAction.GetParameterAsInputValue("EndDate", false).Value, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture); 
+            sepaCreationDate = testAction.GetParameterAsInputValue("StartDate", false).Value;
+            sepaRequestCollectionDate = testAction.GetParameterAsInputValue("EndDate", false).Value;
+            
+            paraStartDate = DateTime.ParseExact(sepaCreationDate.Substring(0,10), "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+           	paraEndDate = DateTime.ParseExact(sepaRequestCollectionDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture); 
             paraExpectedDays = Int32.Parse(testAction.GetParameterAsInputValue("ExpectedDays", false).Value);
                     	
            	if (paraEndDate <= paraStartDate)
@@ -63,7 +67,7 @@ namespace veb
 			if (paraStartDate.DayOfWeek == DayOfWeek.Sunday) calcBusinessDays--;
 			
 			for(i = 0; i < 10; i++) {
-				chosenBatchDate = DateTime.ParseExact(noBatchDays[i], "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+				chosenBatchDate = DateTime.ParseExact(noBatchDays[i], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
 				if (chosenBatchDate >= paraStartDate && chosenBatchDate <= paraEndDate) {
 					calcBusinessDays--;
 				}
