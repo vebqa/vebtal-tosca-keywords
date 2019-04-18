@@ -27,27 +27,32 @@ namespace veb
         public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction) {
         
         	int i, paraExpectedDays;
-        	String sepaCreationDate, sepaRequestCollectionDate;
+        	double calcBusinessDays;
 			DateTime paraStartDate, paraEndDate, chosenBatchDate;
 			String[] noBatchDays = {"2019-01-01", "2019-04-19", "2019-04-22", "2019-05-01", "2019-05-30", "2019-06-10", "2019-10-03", "2019-12-24", "2019-12-25", "2019-12-26", "2019-12-31"};
-			double calcBusinessDays;
-			
-			if (string.IsNullOrEmpty(testAction.GetParameterAsInputValue("StartDate", false).Value))
+
+			String sepaCreationDate = testAction.GetParameterAsInputValue("StartDate", false).Value;
+            String sepaRequestCollectionDate = testAction.GetParameterAsInputValue("EndDate", false).Value;
+            String expectedDays = testAction.GetParameterAsInputValue("ExpectedDays", false).Value;
+            
+			if (string.IsNullOrEmpty(sepaCreationDate))
             {
                 throw new ArgumentException(string.Format("Start Date is required."));
             }
             			
-			if (string.IsNullOrEmpty(testAction.GetParameterAsInputValue("EndDate", false).Value))
+			if (string.IsNullOrEmpty(sepaRequestCollectionDate))
             {
                 throw new ArgumentException(string.Format("End Date is required."));
             }
             
-            sepaCreationDate = testAction.GetParameterAsInputValue("StartDate", false).Value;
-            sepaRequestCollectionDate = testAction.GetParameterAsInputValue("EndDate", false).Value;
+            if (string.IsNullOrEmpty(expectedDays))
+            {
+                throw new ArgumentException(string.Format("Expected Days is required."));
+            }
             
             paraStartDate = DateTime.ParseExact(sepaCreationDate.Substring(0,10), "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
            	paraEndDate = DateTime.ParseExact(sepaRequestCollectionDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture); 
-            paraExpectedDays = Int32.Parse(testAction.GetParameterAsInputValue("ExpectedDays", false).Value);
+            paraExpectedDays = Int32.Parse(expectedDays);
                     	
            	if (paraEndDate <= paraStartDate)
             {
