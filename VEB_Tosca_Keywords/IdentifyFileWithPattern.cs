@@ -45,14 +45,19 @@ namespace veb
             {
                 throw new ArgumentException(string.Format("Buffer Name is required."));
             }
-			
-			/*var matches = Directory.GetFiles(filePath).Where(path => Regex.IsMatch(Path.GetFileName(path), fileNamePattern));*/
-			
+					
 			string[] matches = Directory.GetFiles(filePath, fileNamePattern);
 			
-			Buffers.Instance.SetBuffer(bufferName, String.Join(",", matches), false);
+			int arrLength = matches.Length;
 			
-			return new PassedActionResult("File name saved successfully");
+			if(arrLength == 0) {
+				return new NotFoundFailedActionResult("No matching file name was found for the given pattern.");
+			} else if(arrLength > 1) {
+				return new NotFoundFailedActionResult("More than 1 file found for the given pattern.");
+			} else {
+				Buffers.Instance.SetBuffer(bufferName, matches[0], false);
+				return new PassedActionResult("File name saved successfully");
+			}
             
         }
     }
