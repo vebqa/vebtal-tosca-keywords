@@ -56,7 +56,7 @@ namespace veb
 				return new NotFoundFailedActionResult("More than 1 file found for the given pattern.");
 			} else {
 				Buffers.Instance.SetBuffer(bufferName, matches[0], false);
-				return new PassedActionResult("File name saved successfully");
+				return new PassedActionResult("File name saved successfully.");
 			}
             
         }
