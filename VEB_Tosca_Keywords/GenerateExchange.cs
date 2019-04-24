@@ -1,4 +1,5 @@
 ﻿/*
+ * Ganz Fett Deprecated
  * Created by SharpDevelop.
  * User: doerges
  * Date: 04.11.2016
