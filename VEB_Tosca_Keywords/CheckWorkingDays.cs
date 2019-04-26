@@ -26,7 +26,7 @@ namespace veb
 
         public override ActionResult Execute(ISpecialExecutionTaskTestAction testAction) {
         
-        	int i, paraExpectedDays;
+        	int i, paraExpectedDays, paraExpectedMaxDays;
         	double calcBusinessDays;
 			DateTime paraStartDate, paraEndDate, chosenBatchDate;
 			String[] noBatchDays = {"2019-01-01", "2019-04-19", "2019-04-22", "2019-05-01", "2019-05-30", "2019-06-10", "2019-10-03", "2019-12-24", "2019-12-25", "2019-12-26", "2019-12-31"};
@@ -34,6 +34,7 @@ namespace veb
 			String sepaCreationDate = testAction.GetParameterAsInputValue("StartDate", false).Value;
             String sepaRequestCollectionDate = testAction.GetParameterAsInputValue("EndDate", false).Value;
             String expectedDays = testAction.GetParameterAsInputValue("ExpectedDays", false).Value;
+            String expectedMaxDays = testAction.GetParameterAsInputValue("ExpectedMaxDays", false).Value;
             
 			if (string.IsNullOrEmpty(sepaCreationDate))
             {
@@ -45,26 +46,37 @@ namespace veb
                 throw new ArgumentException(string.Format("End Date is required."));
             }
             
-            if (string.IsNullOrEmpty(expectedDays))
+            if (string.IsNullOrEmpty(expectedDays) && (string.IsNullOrEmpty(expectedMaxDays)))
             {
-                throw new ArgumentException(string.Format("Expected Days is required."));
+                throw new ArgumentException(string.Format("Either Expected Days or Expected Max. days is required."));
             }
             
             paraStartDate = DateTime.ParseExact(sepaCreationDate.Substring(0,10), "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
            	paraEndDate = DateTime.ParseExact(sepaRequestCollectionDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture); 
-            paraExpectedDays = Int32.Parse(expectedDays);
+            
+            if (string.IsNullOrEmpty(expectedDays)) {
+            	paraExpectedDays = -1;
+            } else {
+            	paraExpectedDays = Int32.Parse(expectedDays);
+            }
                     	
+            if (string.IsNullOrEmpty(expectedMaxDays)) {
+            	paraExpectedMaxDays = -1;
+            } else {
+            	paraExpectedMaxDays = Int32.Parse(expectedMaxDays);
+            }
+            
            	if (paraEndDate <= paraStartDate)
             {
                 throw new ArgumentException(string.Format("The Start Date should be before End Date."));
             }
                         
-            if (string.IsNullOrEmpty(testAction.GetParameterAsInputValue("ExpectedDays", false).Value))
-            {
-                throw new ArgumentException(string.Format("Expected Days is required."));
-            } else if (paraExpectedDays < 1) {
-            	throw new ArgumentException(string.Format("Expected Days should be greater than 0."));
-            }
+            // if (string.IsNullOrEmpty(testAction.GetParameterAsInputValue("ExpectedDays", false).Value))
+            // {
+            //    throw new ArgumentException(string.Format("Expected Days is required."));
+            // } else if (paraExpectedDays < 1) {
+            //	throw new ArgumentException(string.Format("Expected Days should be greater than 0."));
+            //}
 			          
 			calcBusinessDays = 1 + ((paraEndDate - paraStartDate).TotalDays * 5 - (paraStartDate.DayOfWeek - paraEndDate.DayOfWeek) * 2) / 7;
 			
@@ -77,13 +89,23 @@ namespace veb
 					calcBusinessDays--;
 				}
 			}
-			
-			if (paraExpectedDays == calcBusinessDays) {
-            	return new PassedActionResult("Expected working days matches with the calculated value.");
-            } else {
-            	return new NotFoundFailedActionResult("Expected Days did not match with the actual no. of working days: " + calcBusinessDays);
+			if (paraExpectedDays > 0) {
+				if (paraExpectedDays == calcBusinessDays) {
+    	        	return new PassedActionResult("Expected working days matches with the calculated value.");
+        	    } else {
+            		return new NotFoundFailedActionResult("Expected Days (" + expectedDays + ") did not match with the actual no. of working days: " + calcBusinessDays);
+            	}
             }
-            
+
+			if (paraExpectedMaxDays > 0) {
+				if (paraExpectedMaxDays >= calcBusinessDays) {
+    	        	return new PassedActionResult("Expected maximum working days matches with the calculated value.");
+        	    } else {
+            		return new NotFoundFailedActionResult("Expected maximum Days (" + expectedMaxDays + ") is smaller than the actual no. of working days: " + calcBusinessDays);
+            	}
+            }
+           
+           return new NotFoundFailedActionResult("No expectation set. Please review teststep!"); 
         }
     }
 }
