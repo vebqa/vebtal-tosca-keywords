@@ -70,14 +70,7 @@ namespace veb
             {
                 throw new ArgumentException(string.Format("The Start Date should be before End Date."));
             }
-                        
-            // if (string.IsNullOrEmpty(testAction.GetParameterAsInputValue("ExpectedDays", false).Value))
-            // {
-            //    throw new ArgumentException(string.Format("Expected Days is required."));
-            // } else if (paraExpectedDays < 1) {
-            //	throw new ArgumentException(string.Format("Expected Days should be greater than 0."));
-            //}
-			          
+
 			calcBusinessDays = 1 + ((paraEndDate - paraStartDate).TotalDays * 5 - (paraStartDate.DayOfWeek - paraEndDate.DayOfWeek) * 2) / 7;
 			
 			if (paraEndDate.DayOfWeek == DayOfWeek.Saturday) calcBusinessDays--;

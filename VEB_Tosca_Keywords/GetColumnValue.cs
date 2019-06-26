@@ -24,8 +24,7 @@ namespace veb
 	public class GetColumnValue : SpecialExecutionTask
 	{
 	
-		public GetColumnValue(Validator validator)
-			: base(validator)
+		public GetColumnValue(Validator validator) : base(validator)
 		{
 		}
 
